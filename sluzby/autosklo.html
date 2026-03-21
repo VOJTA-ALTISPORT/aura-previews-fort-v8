@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="cs" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Autosklo — Autoservis Fořt | Litvínov-Janov</title>
+    <meta name="description" content="Výměna a opravy čelních, bočních a zadních skel. Přímá likvidace s pojišťovnami. Autoservis Fořt Litvínov.">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔧</text></svg>">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            red: '#d71e26', 'red-dark': '#b5191f', 'red-light': '#ff3b43',
+                            blue: '#004c99', 'blue-dark': '#003a75', 'blue-light': '#0066cc',
+                            'gray-light': '#f7f8fa'
+                        }
+                    },
+                    fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
+                    keyframes: {
+                        'gradient-shift': { '0%': { backgroundPosition: '0% 50%' }, '50%': { backgroundPosition: '100% 50%' }, '100%': { backgroundPosition: '0% 50%' } },
+                    },
+                    animation: {
+                        'gradient-shift': 'gradient-shift 8s ease infinite',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        [x-cloak] { display: none !important; }
+        .hero-gradient {
+            background: linear-gradient(135deg, #001a3a 0%, #002d66 30%, #004c99 60%, #001a3a 100%);
+            background-size: 300% 300%;
+            animation: gradient-shift 8s ease infinite;
+        }
+        html { scroll-padding-top: 90px; }
+        .reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.8s cubic-bezier(0.16,1,0.3,1), transform 0.8s cubic-bezier(0.16,1,0.3,1); }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+        .reveal-scale { opacity: 0; transform: scale(0.95); transition: opacity 0.8s cubic-bezier(0.16,1,0.3,1), transform 0.8s cubic-bezier(0.16,1,0.3,1); }
+        .reveal-scale.visible { opacity: 1; transform: scale(1); }
+        .stagger-children > * { transition-delay: calc(var(--i, 0) * 100ms); }
+        .feature-card { transition: transform 0.4s cubic-bezier(0.16,1,0.3,1), box-shadow 0.4s, border-color 0.3s; }
+        .feature-card:hover { transform: translateY(-6px) scale(1.01); box-shadow: 0 20px 50px -12px rgba(0,0,0,0.12); }
+        .gradient-text { background: linear-gradient(135deg, #004c99, #d71e26); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .section-divider { height: 4px; background: linear-gradient(90deg, transparent 0%, #d71e26 20%, #004c99 50%, #d71e26 80%, transparent 100%); background-size: 200% 100%; animation: gradient-shift 4s linear infinite; }
+        .glass { background: rgba(255,255,255,.07); backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,.12); }
+        .orb { position: absolute; border-radius: 50%; filter: blur(80px); pointer-events: none; }
+        #scroll-progress { transform-origin: left; transform: scaleX(0); }
+        .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.5s cubic-bezier(0.16,1,0.3,1); }
+        .accordion-open .accordion-content { max-height: 500px; }
+        .accordion-icon { transition: transform 0.3s; }
+        .accordion-open .accordion-icon { transform: rotate(180deg); }
+    </style>
+</head>
+<body class="font-sans text-gray-900 bg-white antialiased overflow-x-hidden" x-data="{ mobileMenu: false, scrolled: false }" @scroll.window="scrolled = (window.scrollY > 20)">
+
+<!-- SCROLL PROGRESS -->
+<div id="scroll-progress" class="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-brand-red via-brand-blue to-brand-red z-[60]"></div>
+
+<!-- NAV -->
+<nav class="fixed top-0 left-0 right-0 z-50 transition-all duration-500" :class="scrolled ? 'bg-white/95 backdrop-blur-xl shadow-lg shadow-black/5 border-b border-gray-100' : 'bg-transparent'">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-16 md:h-20">
+            <a href="../index.html" class="flex items-center gap-3 shrink-0 group">
+                <div class="w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300 group-hover:scale-110" :class="scrolled ? 'bg-brand-blue shadow-lg shadow-blue-200' : 'bg-white/15 backdrop-blur-sm border border-white/20'">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                </div>
+                <div>
+                    <div class="text-lg font-extrabold tracking-tight transition-colors" :class="scrolled ? '' : 'text-white'"><span :class="scrolled ? 'text-brand-blue' : 'text-white'">AUTOSERVIS</span> <span class="text-brand-red">FOŘT</span></div>
+                    <div class="text-[10px] font-medium tracking-widest uppercase -mt-0.5 transition-colors" :class="scrolled ? 'text-gray-400' : 'text-white/60'">Litvínov-Janov</div>
+                </div>
+            </a>
+            <div class="hidden lg:flex items-center gap-1">
+                <a href="../index.html" class="px-4 py-2 text-sm font-medium rounded-lg transition-colors" :class="scrolled ? 'text-gray-600 hover:text-brand-blue hover:bg-gray-50' : 'text-white/80 hover:text-white hover:bg-white/10'">
+                    <span class="flex items-center gap-1.5"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>Zpět na hlavní</span>
+                </a>
+                <a href="../index.html#sluzby" class="px-4 py-2 text-sm font-medium rounded-lg transition-colors" :class="scrolled ? 'text-gray-600 hover:text-brand-blue hover:bg-gray-50' : 'text-white/80 hover:text-white hover:bg-white/10'">Služby</a>
+                <a href="../index.html#kontakt" class="px-4 py-2 text-sm font-medium rounded-lg transition-colors" :class="scrolled ? 'text-gray-600 hover:text-brand-blue hover:bg-gray-50' : 'text-white/80 hover:text-white hover:bg-white/10'">Kontakt</a>
+                <a href="tel:+420732381476" class="ml-4 inline-flex items-center gap-2 bg-brand-red hover:bg-brand-red-dark text-white font-semibold text-sm px-5 py-2.5 rounded-xl transition-all shadow-lg shadow-red-500/25 hover:shadow-red-500/40 hover:-translate-y-0.5">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+                    732 381 476
+                </a>
+            </div>
+            <button @click="mobileMenu = !mobileMenu" class="lg:hidden p-2.5 rounded-xl transition-colors" :class="scrolled ? 'hover:bg-gray-100 text-gray-700' : 'hover:bg-white/10 text-white'">
+                <svg x-show="!mobileMenu" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                <svg x-show="mobileMenu" x-cloak class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+        </div>
+    </div>
+    <!-- Mobile menu -->
+    <div x-show="mobileMenu" x-cloak
+         x-transition:enter="transition ease-out duration-300"
+         x-transition:enter-start="opacity-0 -translate-y-4"
+         x-transition:enter-end="opacity-100 translate-y-0"
+         x-transition:leave="transition ease-in duration-200"
+         x-transition:leave-start="opacity-100 translate-y-0"
+         x-transition:leave-end="opacity-0 -translate-y-4"
+         class="lg:hidden bg-white/98 backdrop-blur-xl border-t border-gray-100 shadow-2xl px-4 py-6 space-y-2">
+        <a @click="mobileMenu=false" href="../index.html" class="flex items-center gap-3 px-4 py-3.5 text-gray-700 font-medium rounded-xl hover:bg-brand-blue/5">
+            <svg class="w-5 h-5 text-brand-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>Zpět na hlavní
+        </a>
+        <a @click="mobileMenu=false" href="../index.html#sluzby" class="flex items-center gap-3 px-4 py-3.5 text-gray-700 font-medium rounded-xl hover:bg-brand-blue/5">
+            <svg class="w-5 h-5 text-brand-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>Služby
+        </a>
+        <div class="pt-2">
+            <a href="tel:+420732381476" class="flex items-center justify-center gap-2.5 bg-brand-red text-white font-bold py-4 rounded-xl shadow-lg">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+                Zavolat: 732 381 476
+            </a>
+        </div>
+    </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero-gradient relative overflow-hidden pt-28 pb-16 md:pt-36 md:pb-24">
+    <div class="orb w-[400px] h-[400px] bg-brand-red/10 top-[-10%] right-[-5%]"></div>
+    <div class="orb w-[300px] h-[300px] bg-blue-500/10 bottom-[-10%] left-[-5%]"></div>
+    <div class="absolute inset-0 opacity-[0.03]"><svg class="w-full h-full" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="grid" width="60" height="60" patternUnits="userSpaceOnUse"><path d="M 60 0 L 0 0 0 60" fill="none" stroke="white" stroke-width="0.5"/></pattern></defs><rect width="100%" height="100%" fill="url(#grid)"/></svg></div>
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <nav class="text-sm text-blue-200/60 mb-8 flex items-center gap-2 flex-wrap hero-el" style="--delay:0.2s">
+            <a href="../index.html" class="hover:text-white transition-colors">Domů</a>
+            <svg class="w-4 h-4 text-blue-300/30" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+            <a href="../index.html#sluzby" class="hover:text-white transition-colors">Služby</a>
+            <svg class="w-4 h-4 text-blue-300/30" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+            <span class="text-white font-medium">Autosklo</span>
+        </nav>
+        <div class="grid lg:grid-cols-2 gap-10 items-end">
+            <div>
+                <div class="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full px-5 py-2 mb-6 hero-el" style="--delay:0.3s">
+                    <div class="w-8 h-8 bg-brand-red/20 rounded-lg flex items-center justify-center">
+                        <svg class="w-4 h-4 text-brand-red" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2" stroke-width="2"/><line x1="3" y1="3" x2="21" y2="21" stroke-width="2"/></svg>
+                    </div>
+                    <span class="text-white/80 text-sm font-medium">Výměna skel</span>
+                </div>
+                <h1 class="text-4xl md:text-6xl lg:text-7xl font-black text-white tracking-tight leading-[1.05] hero-el" style="--delay:0.4s">Autosklo</h1>
+                <p class="mt-5 text-lg md:text-xl text-blue-100/70 max-w-xl leading-relaxed hero-el" style="--delay:0.6s">Výměna a opravy čelních, bočních a zadních skel. Přímá likvidace pojistných událostí s pojišťovnami.</p>
+            </div>
+            <div class="hidden lg:flex justify-end hero-el" style="--delay:0.5s">
+                <div class="glass rounded-2xl p-6 max-w-xs">
+                    <div class="flex items-center gap-3 mb-3">
+                        <div class="w-10 h-10 bg-brand-red/20 rounded-xl flex items-center justify-center">
+                            <svg class="w-5 h-5 text-brand-red" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+                        </div>
+                        <div>
+                            <div class="text-white/60 text-xs font-medium">Objednat se</div>
+                            <a href="tel:+420732381476" class="text-white font-bold text-lg hover:text-brand-red transition-colors">732 381 476</a>
+                        </div>
+                    </div>
+                    <div class="text-white/40 text-xs">Po–Pá: 7:00 – 16:30</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FEATURES -->
+<section class="py-16 md:py-28">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-3xl mx-auto mb-14 md:mb-20 reveal">
+            <h2 class="text-3xl md:text-5xl font-black text-gray-900 tracking-tight">Co pro vás <span class="gradient-text">uděláme</span></h2>
+            <p class="mt-4 text-lg text-gray-500">Kompletní služby v oblasti autoskel</p>
+        </div>
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6 mb-16 stagger-children">
+            <div class="feature-card reveal bg-white border border-gray-100 rounded-3xl p-7 md:p-8 group hover:border-brand-blue/20" style="--i:0">
+                <div class="w-14 h-14 bg-gradient-to-br from-brand-blue/10 to-brand-blue/5 rounded-2xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300">
+                    <svg class="w-7 h-7 text-brand-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2" stroke-width="2"/><line x1="3" y1="3" x2="21" y2="21" stroke-width="2"/></svg>
+                </div>
+                <h3 class="font-bold text-gray-900 text-xl mb-2 group-hover:text-brand-blue transition-colors">Výměna čelního skla</h3>
+                <p class="text-sm text-gray-500 leading-relaxed">Profesionální výměna čelního skla s použitím kvalitních materiálů a dodržením technologických postupů.</p>
+            </div>
+            <div class="feature-card reveal bg-white border border-gray-100 rounded-3xl p-7 md:p-8 group hover:border-brand-red/20" style="--i:1">
+                <div class="w-14 h-14 bg-gradient-to-br from-brand-red/10 to-brand-red/5 rounded-2xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300">
+                    <svg class="w-7 h-7 text-brand-red" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>
+                </div>
+                <h3 class="font-bold text-gray-900 text-xl mb-2 group-hover:text-brand-red transition-colors">Oprava poškození</h3>
+                <p class="text-sm text-gray-500 leading-relaxed">Oprava drobných poškození čelního skla (odštěpky od kamínků) bez nutnosti celé výměny.</p>
+            </div>
+            <div class="feature-card reveal bg-white border border-gray-100 rounded-3xl p-7 md:p-8 group hover:border-amber-400/20" style="--i:2">
+                <div class="w-14 h-14 bg-gradient-to-br from-amber-100 to-amber-50 rounded-2xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300">
+                    <svg class="w-7 h-7 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2" stroke-width="2"/><line x1="8" y1="21" x2="16" y2="21" stroke-width="2"/><line x1="12" y1="17" x2="12" y2="21" stroke-width="2"/></svg>
+                </div>
+                <h3 class="font-bold text-gray-900 text-xl mb-2 group-hover:text-amber-600 transition-colors">Boční a zadní skla</h3>
+                <p class="text-sm text-gray-500 leading-relaxed">Výměna bočních i zadních skel včetně vyhřívaných a tónovaných variant.</p>
+            </div>
+            <div class="feature-card reveal bg-white border border-gray-100 rounded-3xl p-7 md:p-8 group hover:border-brand-blue/20" style="--i:3">
+                <div class="w-14 h-14 bg-gradient-to-br from-brand-blue/10 to-brand-blue/5 rounded-2xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300">
+                    <svg class="w-7 h-7 text-brand-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                </div>
+                <h3 class="font-bold text-gray-900 text-xl mb-2 group-hover:text-brand-blue transition-colors">Pojistné události</h3>
+                <p class="text-sm text-gray-500 leading-relaxed">Přímá likvidace s pojišťovnami — vyřídíme celou pojistnou událost za vás, často bez spoluúčasti.</p>
+            </div>
+            <div class="feature-card reveal bg-white border border-gray-100 rounded-3xl p-7 md:p-8 group hover:border-emerald-400/20" style="--i:4">
+                <div class="w-14 h-14 bg-gradient-to-br from-emerald-100 to-emerald-50 rounded-2xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300">
+                    <svg class="w-7 h-7 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                </div>
+                <h3 class="font-bold text-gray-900 text-xl mb-2 group-hover:text-emerald-600 transition-colors">Kvalitní skla</h3>
+                <p class="text-sm text-gray-500 leading-relaxed">Používáme originální i aftermarket skla v nejvyšší kvalitě s certifikací pro vaše vozidlo.</p>
+            </div>
+            <div class="feature-card reveal bg-white border border-gray-100 rounded-3xl p-7 md:p-8 group hover:border-brand-red/20" style="--i:5">
+                <div class="w-14 h-14 bg-gradient-to-br from-brand-red/10 to-brand-red/5 rounded-2xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300">
+                    <svg class="w-7 h-7 text-brand-red" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                </div>
+                <h3 class="font-bold text-gray-900 text-xl mb-2 group-hover:text-brand-red transition-colors">Rychlá výměna</h3>
+                <p class="text-sm text-gray-500 leading-relaxed">Většinu výměn zvládneme během jednoho dne. Sklo objednáme a vyměníme co nejdříve.</p>
+            </div>
+        </div>
+
+        <!-- WHY CHOOSE US - expanding accordion -->
+        <div class="max-w-3xl mx-auto reveal" x-data="{ open: 1 }">
+            <h3 class="text-2xl md:text-3xl font-black text-gray-900 text-center mb-8">Proč právě <span class="gradient-text">my?</span></h3>
+            <div class="space-y-3">
+                <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden transition-all" :class="open === 1 ? 'shadow-lg shadow-brand-blue/5 border-brand-blue/20 accordion-open' : 'hover:shadow-md'">
+                    <button @click="open = open === 1 ? null : 1" class="w-full flex items-center justify-between px-7 py-5 text-left">
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 rounded-xl bg-brand-blue/10 flex items-center justify-center shrink-0">
+                                <svg class="w-5 h-5 text-brand-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                            </div>
+                            <span class="font-semibold text-gray-900">Přímá likvidace s pojišťovnami</span>
+                        </div>
+                        <svg class="w-5 h-5 text-gray-400 shrink-0 accordion-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="px-7 pb-5 text-gray-500 leading-relaxed">Vyřídíme celou pojistnou událost za vás. Komunikujeme přímo s pojišťovnou, vy nemusíte řešit nic.</div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden transition-all" :class="open === 2 ? 'shadow-lg shadow-brand-blue/5 border-brand-blue/20 accordion-open' : 'hover:shadow-md'">
+                    <button @click="open = open === 2 ? null : 2" class="w-full flex items-center justify-between px-7 py-5 text-left">
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 rounded-xl bg-brand-red/10 flex items-center justify-center shrink-0">
+                                <svg class="w-5 h-5 text-brand-red" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            </div>
+                            <span class="font-semibold text-gray-900">Kvalitní materiály</span>
+                        </div>
+                        <svg class="w-5 h-5 text-gray-400 shrink-0 accordion-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="px-7 pb-5 text-gray-500 leading-relaxed">Používáme pouze certifikovaná skla a lepidla. Záruka na provedené práce.</div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden transition-all" :class="open === 3 ? 'shadow-lg shadow-brand-blue/5 border-brand-blue/20 accordion-open' : 'hover:shadow-md'">
+                    <button @click="open = open === 3 ? null : 3" class="w-full flex items-center justify-between px-7 py-5 text-left">
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 rounded-xl bg-emerald-100 flex items-center justify-center shrink-0">
+                                <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                            </div>
+                            <span class="font-semibold text-gray-900">Rychlé vyřízení</span>
+                        </div>
+                        <svg class="w-5 h-5 text-gray-400 shrink-0 accordion-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="px-7 pb-5 text-gray-500 leading-relaxed">Většinu výměn zvládneme během jednoho pracovního dne. Minimální čekací doba.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CTA -->
+        <div class="mt-16 md:mt-20 reveal">
+            <div class="relative overflow-hidden bg-gradient-to-r from-brand-red to-brand-red-dark rounded-3xl p-8 md:p-14 text-center">
+                <div class="absolute inset-0 opacity-10"><svg class="w-full h-full" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="ctaDots2" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="1" fill="white"/></pattern></defs><rect width="100%" height="100%" fill="url(#ctaDots2)"/></svg></div>
+                <div class="relative">
+                    <h2 class="text-2xl md:text-4xl font-black text-white mb-4">Prasklo vám čelní sklo?</h2>
+                    <p class="text-red-100 mb-8 max-w-xl mx-auto text-lg">Zavolejte nám — vyřídíme výměnu i pojistnou událost za vás.</p>
+                    <a href="tel:+420732381476" class="group inline-flex items-center gap-2.5 bg-white text-brand-red font-bold text-lg px-8 py-4 rounded-2xl hover:bg-gray-50 transition-all shadow-2xl hover:-translate-y-1 active:translate-y-0">
+                        <svg class="w-5 h-5 group-hover:animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+                        732 381 476
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="bg-gray-950 text-gray-400 pt-16 pb-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid md:grid-cols-3 gap-10 mb-12">
+            <div>
+                <div class="text-xl font-extrabold mb-4"><span class="text-brand-blue">AUTOSERVIS</span> <span class="text-brand-red">FOŘT</span></div>
+                <p class="text-sm text-gray-500 leading-relaxed">Kompletní autoservis a pneuservis v Litvínově-Janově.</p>
+            </div>
+            <div>
+                <h4 class="text-white font-semibold mb-4 text-sm uppercase tracking-wider">Kontakt</h4>
+                <div class="space-y-2 text-sm">
+                    <p>Podkrušnohorská 7, Litvínov-Janov, 436 01</p>
+                    <p>Tel: <a href="tel:+420732381476" class="text-blue-400 hover:text-white transition-colors font-medium">732 381 476</a></p>
+                    <p>E-mail: <a href="mailto:info@autoservis-fort.cz" class="text-blue-400 hover:text-white transition-colors font-medium">info@autoservis-fort.cz</a></p>
+                </div>
+            </div>
+            <div>
+                <h4 class="text-white font-semibold mb-4 text-sm uppercase tracking-wider">Otevírací doba</h4>
+                <div class="space-y-2 text-sm">
+                    <p>Po-Pá: 7:00 – 16:30</p>
+                    <p>So-Ne: zavřeno</p>
+                </div>
+            </div>
+        </div>
+        <div class="border-t border-gray-800/50 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+            <p class="text-sm text-gray-600">&copy; 2026 Autoservis Fořt. Všechna práva vyhrazena.</p>
+            <a href="../index.html" class="text-sm text-gray-500 hover:text-white transition-colors flex items-center gap-1.5">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+                Zpět na hlavní stránku
+            </a>
+        </div>
+    </div>
+</footer>
+
+<!-- Back to top -->
+<button onclick="window.scrollTo({top:0,behavior:'smooth'})"
+    x-data="{ show: false }" @scroll.window="show = (window.scrollY > 400)"
+    x-show="show" x-cloak
+    x-transition:enter="transition ease-out duration-300"
+    x-transition:enter-start="opacity-0 translate-y-4"
+    x-transition:enter-end="opacity-100 translate-y-0"
+    x-transition:leave="transition ease-in duration-200"
+    x-transition:leave-start="opacity-100 translate-y-0"
+    x-transition:leave-end="opacity-0 translate-y-4"
+    class="fixed bottom-6 right-6 z-50 w-12 h-12 bg-brand-blue text-white rounded-2xl shadow-lg flex items-center justify-center hover:bg-brand-blue-dark transition-colors active:scale-95">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"/></svg>
+</button>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // Scroll progress
+    const progressBar = document.getElementById('scroll-progress');
+    window.addEventListener('scroll', () => {
+        const scrollTop = window.scrollY;
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        progressBar.style.transform = `scaleX(${docHeight > 0 ? scrollTop / docHeight : 0})`;
+    }, { passive: true });
+
+    // Reveal observer
+    const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const parent = entry.target.parentElement;
+                if (parent && parent.classList.contains('stagger-children')) {
+                    const i = Array.from(parent.children).indexOf(entry.target);
+                    entry.target.style.transitionDelay = `${i * 100}ms`;
+                }
+                entry.target.classList.add('visible');
+            }
+        });
+    }, { threshold: 0.08, rootMargin: '0px 0px -60px 0px' });
+
+    document.querySelectorAll('.reveal, .reveal-scale').forEach(el => revealObserver.observe(el));
+
+    // Hero staggered entrance
+    document.querySelectorAll('.hero-el').forEach((el, i) => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(20px)';
+        const delay = parseFloat(getComputedStyle(el).getPropertyValue('--delay') || '0') * 1000;
+        setTimeout(() => {
+            el.style.transition = 'opacity 0.7s cubic-bezier(0.16,1,0.3,1), transform 0.7s cubic-bezier(0.16,1,0.3,1)';
+            el.style.opacity = '1';
+            el.style.transform = 'translateY(0)';
+        }, delay);
+    });
+});
+</script>
+</body>
+</html>
